@@ -1,0 +1,84 @@
+body {
+  background-color: rgb(38, 15, 59);
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3rem;
+  margin: 20px 0;
+}
+
+#hidden-word {
+  font-size: 2rem;
+  letter-spacing: 0.5rem;
+  margin: 20px 0;
+}
+
+#alphabet-buttons {
+  margin: 20px auto;
+  display: flex;
+  width: 50%;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+#alphabet-buttons button {
+  background-color: #444;
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#alphabet-buttons button:hover {
+  background-color: #666;
+  transform: scale(1.1);
+}
+
+#alphabet-buttons button.correct {
+  background-color: green;
+  color: white;
+}
+
+#alphabet-buttons button.incorrect {
+  background-color: red;
+  color: white;
+}
+
+#timer {
+  font-size: 1.5rem;
+  margin: 20px 0;
+}
+
+.start-button {
+  display: inline-block;
+  margin: 30px auto;
+  padding: 10px 20px;
+  background-color: #222;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  border: 1px solid white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.start-button:hover {
+  background-color: #444;
+  transform: scale(1.1);
+}
+.lose,
+.winner {
+  display: none;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}

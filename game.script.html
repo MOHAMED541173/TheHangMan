@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>The Hanged Man</title>
+    <link rel="stylesheet" type="text/css" href="game.code.css" />
+  </head>
+  <body>
+    <h1>The Hanged Man Game</h1>
+    <div class="gameContainer">
+      <div id="hidden-word"></div>
+      <div id="alphabet-buttons"></div>
+      <div id="timer">Time left: 30s</div>
+      <img id="hangman-image" src="./images/hangman0.gif" alt="Hanging man" />
+    </div>
+    <img class="winner" src="./images/winner.gif" alt="Hanging man" />
+    <img class="lose" src="./kick-chair-hang-self.gif" alt="Hanging man" />
+
+    <a href="game.script.html" class="start-button">Restart</a>
+    <script>
+      // Array of words to guess
+      const words = [
+        'hangman',
+        'testimony',
+        'javascript',
+        'challenge',
+        'developer',
+        'summer',
+        'winter',
+        'thunder',
+        'lenovo'
+      ];
+
+      let guessedLetters = [];
+      let word = words[Math.floor(Math.random() * words.length)].toUpperCase(); // Random word selection
+      let timer;
+      let timeLeft = 30; // 30 seconds countdown
+      let wrongGuesses = 0; // Track incorrect guesses
+      const maxGuesses = 5; // Maximum wrong guesses
+
+      // Function to display the hidden word
+      function displayHiddenWord() {
+        const hiddenWordDiv = document.getElementById('hidden-word');
+        hiddenWordDiv.textContent = guessedLetters.join(' ');
+      }
+
+      // Function to create alphabet buttons
+      function createAlphabetButtons() {
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const buttonsDiv = document.getElementById('alphabet-buttons');
+        buttonsDiv.innerHTML = '';
+
+        alphabet.split('').forEach((letter) => {
+          const button = document.createElement('button');
+          button.textContent = letter;
+          button.addEventListener('click', () => handleGuess(letter, button));
+          buttonsDiv.appendChild(button);
+        });
+      }
+
+      // Function to start the timer
+      function startTimer() {
+        clearInterval(timer);
+        timeLeft = 30;
+        updateTimerDisplay();
+
+        timer = setInterval(() => {
+          timeLeft -= 1;
+          updateTimerDisplay();
+
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            endGame(false);
+          }
+        }, 1000);
+      }
+
+      // Function to update the timer display
+      function updateTimerDisplay() {
+        const timerDiv = document.getElementById('timer');
+        timerDiv.textContent = `Time left: ${timeLeft}s`;
+      }
+
+      // Function to handle letter guesses
+      function handleGuess(letter, button) {
+        let found = false;
+
+        // Check if the letter is in the word
+        for (let i = 0; i < word.length; i++) {
+          if (word[i] === letter) {
+            guessedLetters[i] = letter;
+            found = true;
+          }
+        }
+
+        // Apply the correct or incorrect class
+        if (found) {
+          button.classList.add('correct');
+        } else {
+          button.classList.add('incorrect');
+          wrongGuesses++;
+          updateHangmanImage();
+
+          // Check if max wrong guesses reached
+          if (wrongGuesses >= maxGuesses) {
+            endGame(false);
+            return;
+          }
+        }
+
+        // Disable the button after clicking
+        button.disabled = true;
+        timeLeft = 30;
+        updateTimerDisplay();
+        // Update the hidden word display
+        displayHiddenWord();
+
+        // Reset the timer if a correct guess is made
+        if (found) {
+          timeLeft = 30;
+          updateTimerDisplay();
+        }
+
+        // Check win condition
+        if (!guessedLetters.includes('_')) {
+          endGame(true);
+        }
+      }
+
+      // Function to update the hangman image
+      function updateHangmanImage() {
+        const hangmanImage = document.getElementById('hangman-image');
+        hangmanImage.src = `./images/hangman${wrongGuesses}.gif`;
+      }
+
+      // Function to end the game
+      function endGame(won) {
+        clearInterval(timer);
+        disableAllButtons();
+
+        if (won) {
+          setTimeout(() => {
+            alert('Congratulations! You guessed the word!');
+          }, 500);
+          document.querySelector('.winner').style.display = 'block';
+          document.getElementById('hangman-image').style.display = 'none';
+          document.getElementById('timer').style.display = 'none';
+        } else {
+          document.querySelector('.lose').style.display = 'block';
+          document.querySelector('.gameContainer').style.display = 'none';
+          setTimeout(() => {
+            alert(`You lose! The word was "${word}".`);
+          }, 500);
+        }
+      }
+
+      // disable all alphabet buttons
+      function disableAllButtons() {
+        const buttons = document.querySelectorAll('#alphabet-buttons button');
+        buttons.forEach((button) => (button.disabled = true));
+      }
+
+      //start game
+      guessedLetters = Array(word.length).fill('_');
+      displayHiddenWord();
+      createAlphabetButtons();
+      startTimer();
+    </script>
+  </body>
+</html>
